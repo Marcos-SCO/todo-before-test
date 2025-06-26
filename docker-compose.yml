@@ -1,0 +1,65 @@
+services:
+  app:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+      args:
+        user: todoBeforeTest
+        uid: 1000
+    working_dir: /application/todo-api
+    volumes:
+      - .:/application
+      - ./docker/app/php.ini:/usr/local/etc/php/php.ini
+    # depends_on:
+    #   - mysql
+    networks:
+      - todoBeforeTest
+
+  frontend:
+    image: node:22.15.0-alpine
+    working_dir: /application/todo-frontend
+    volumes:
+      - .:/application
+    command: sh -c "tail -f /dev/null"
+    ports:
+      - 5173:5173
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+    networks:
+      - todoBeforeTest
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "8000:80"
+    volumes:
+      - .:/application
+      - ./docker/nginx:/etc/nginx/conf.d/
+    depends_on:
+      - app
+    networks:
+      - todoBeforeTest
+
+  # mysql:
+  #   image: mysql:8.0
+  #   restart: unless-stopped
+  #   environment:
+  #     MYSQL_DATABASE: ${DOCKER_MYSQL_DATABASE}
+  #     MYSQL_USER: ${DOCKER_MYSQL_USER}
+  #     MYSQL_PASSWORD: ${DOCKER_MYSQL_PASSWORD}
+  #     MYSQL_ROOT_PASSWORD: ${DOCKER_MYSQL_PASSWORD}
+  #   ports:
+  #     - "3306:3306"
+  #   volumes:
+  #     - 3306:3306
+  #     - "${DOCKER_EXTERNAL_MYSQL_PORT}:3306"
+  #   networks:
+  #     - todoBeforeTest
+
+networks:
+  todoBeforeTest:
+    driver: bridge
+
+# volumes:
+#   db_data:

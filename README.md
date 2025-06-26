@@ -18,3 +18,4 @@ npm create vite@latest todo-frontend -- --template vue
 npm install -D tailwindcss@latest @tailwindcss/postcss autoprefixer@latest
 
 npm install pinia axios
+
