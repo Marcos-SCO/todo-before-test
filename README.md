@@ -26,3 +26,6 @@ vue3-toastify
 
 fontawesome
 - npm install @fortawesome/fontawesome-free
+
+githubpages
+- npm install --save-dev gh-pages
