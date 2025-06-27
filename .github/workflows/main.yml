@@ -1,0 +1,50 @@
+on:
+  push:
+    branches:
+      - main
+
+name: 🚀 Deploy api on push
+
+jobs:
+  web-deploy:
+    name: 🎉 Deploy
+    environment: alloy-api-deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🚚 Get latest code
+        uses: actions/checkout@v2
+
+      - name: 🧰 Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "22.15.0"
+
+      - name: 🧰 Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, pdo, pdo_mysql, bcmath
+          tools: composer
+
+      - name: 📦 Install Laravel dependencies
+        working-directory: ./todo-api
+        run: composer install --no-interaction --prefer-dist --optimize-autoloader
+
+      - name: 🧹 Clean old frontend build
+        run: rm -rf public/build
+
+      - name: 📦 Install frontend dependencies
+        run: npm ci
+
+      # - name: 🔨 Build frontend assets
+      #   run: npm run build
+
+      - name: 📂 Upload site via FTP
+        uses: SamKirkland/FTP-Deploy-Action@4.1.0
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: ${{ secrets.SERVER_DIR }}
+          local-dir: ./
