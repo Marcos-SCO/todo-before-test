@@ -34,8 +34,8 @@ jobs:
       - name: 🧹 Clean old frontend build
         run: rm -rf public/build
 
-      - name: 📦 Install frontend dependencies
-        run: npm ci
+      # - name: 📦 Install frontend dependencies
+      #   run: npm ci
 
       # - name: 🔨 Build frontend assets
       #   run: npm run build
