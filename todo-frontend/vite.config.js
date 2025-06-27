@@ -2,11 +2,11 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue';
 import tailwindcss from '@tailwindcss/vite'
 
-const isProduction = process.env.NODE_ENV === 'production';
+const isLocalhost = process.env.NODE_ENV === 'development';
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: isProduction ? '/todo-before-test/' : '/',
+  base: isLocalhost ? '/' : '/todo-before-test/',
   plugins: [
     vue(),
     tailwindcss()

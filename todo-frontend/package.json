@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "deploy": "vite build && gh-pages -d dist"
   },
-  "homepage": "https://Marcos-sco.github.io/todo-frontend/",
+  "homepage": "https://marcos-sco.github.io/todo-before-test/",
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.7.2",
     "@tailwindcss/vite": "^4.1.11",
