@@ -19,3 +19,10 @@ npm install -D tailwindcss@latest @tailwindcss/postcss autoprefixer@latest
 
 npm install pinia axios
 
+# Libs
+
+vue3-toastify
+- npm install vue3-toastify
+
+fontawesome
+- npm install @fortawesome/fontawesome-free

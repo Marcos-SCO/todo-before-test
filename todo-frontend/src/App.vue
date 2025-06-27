@@ -1,4 +1,6 @@
 <script setup>
+  import { toast } from "vue3-toastify";
+
   import { onMounted, ref, watch } from "vue";
   import { useTodoStore } from "./stores/todoStore";
   import { useRoute, useRouter } from "vue-router";
@@ -35,6 +37,8 @@
     if (!newTaskValue) return;
     await store.addTodo(newTaskValue);
 
+    toast.success("New task added!");
+
     router.push({ query: { ...route.query, page: 1 } });
 
     newTask.value = "";
@@ -57,8 +61,13 @@
 
   async function toggleFinished(todo) {
     togglingTodoId.value = todo.id;
+
     await store.toggleFinished(todo);
     togglingTodoId.value = null;
+
+    const taskName = todo?.task_name;
+
+    if (!todo.finished) toast.success(`Task "${taskName.substring(0, 10)}..." marked as completed 🎉`);
   }
 
   async function deleteTodoItem(todo) {
@@ -67,12 +76,15 @@
     await store.deleteTodo(todo.id);
     togglingTodoId.value = null;
 
+    const taskName = todo?.task_name;
+    toast.error(`Deleted Task "${taskName.substring(0, 20)}..."`);
+
     await router.push({ query: { ...route.query, page: 1 } });
   }
 </script>
 
 <template>
-  <div class="p-6 max-w-2xl mx-auto space-y-6 bg-white shadow-md rounded mt-10">
+  <div class="p-6 max-w-3xl mx-auto space-y-6 bg-white shadow-md rounded my-10">
     <div class="p-6 max-w-2xl mx-auto">
       <h1 :class="['text-2xl font-bold mb-4']">Todos</h1>
 
@@ -91,7 +103,6 @@
         v-model="newTask"
         @keyup.enter="addTodo"
         placeholder="Add new task"
-        
         class="w-full px-4 py-2 rounded-lg border border-gray-200 shadow-sm focus:ring-2 focus:ring-gray-200 focus:outline-none transition placeholder:text-gray-400"
       />
 
@@ -136,12 +147,12 @@
         :key="todo.id"
         @click="toggleFinished(todo)"
         class="py-3 px-4 bg-white rounded hover:bg-gray-50 flex justify-between items-center transition cursor-pointer"
-        :class="[{ 'text-gray-400': todo.finished }, { 'opacity-50': togglingTodoId == todo.id }]"
+        :class="[{ 'text-gray-400': todo.finished }]"
       >
         <div class="flex items-center gap-2">
           <div>
-            <span v-if="!todo.finished">⬜</span>
-            <span v-if="todo.finished">✅</span>
+            <i v-if="!todo.finished" class="far fa-square text-gray-400"></i>
+            <i v-if="todo.finished" class="fas fa-check-circle text-green-500"></i>
           </div>
           <span
             :class="[{ 'line-through text-gray-400': todo.finished }, { 'opacity-50': togglingTodoId == todo.id }]"
@@ -151,7 +162,8 @@
 
         <div class="flex items-center gap-2">
           <button @click.stop="deleteTodoItem(todo)" class="text-red-500 hover:text-red-700 text-sm cursor-pointer">
-            <span class="mr-2">Remove</span>🗑️
+            <i class="fas fa-trash-alt mr-1"></i>
+            <span class="mr-2">Remove</span>
           </button>
         </div>
       </li>

@@ -40,7 +40,7 @@ export const useTodoStore = defineStore('todo', {
             
             try {
                 const response = await axios.put(`${apiUrl}/${todo.id}`, {
-                    finished: !todo.finished,
+                    finished: !(todo.finished),
                 });
 
                 const index = this.todos.findIndex(item => item.id === todo.id);
