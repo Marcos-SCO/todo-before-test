@@ -19,7 +19,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "20"
+          node-version: "22.15.0"
 
       - name: Create .env.production file
         run: echo "VITE_API_URL=${{ secrets.VITE_API_URL }}" > .env.production
