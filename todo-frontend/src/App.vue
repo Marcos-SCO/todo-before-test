@@ -8,6 +8,7 @@
   const store = useTodoStore();
   const newTask = ref("");
   const togglingTodoId = ref(null);
+  const errorMessage = ref(null);
 
   const route = useRoute();
   const router = useRouter();
@@ -17,6 +18,8 @@
     const finished = route.query.finished || 0;
 
     store.filters.finished = +finished;
+
+    errorMessage.value = null;
 
     await store.fetchTodos({ page, finished });
   }
@@ -34,13 +37,18 @@
   async function addTodo() {
     const newTaskValue = newTask?.value.trim();
 
-    if (!newTaskValue) return;
+    if (!newTaskValue) {
+      errorMessage.value = "Write something first...";
+      return;
+    }
+
     await store.addTodo(newTaskValue);
 
     toast.success("New task added!");
 
     router.push({ query: { ...route.query, page: 1 } });
 
+    errorMessage.value = null;
     newTask.value = "";
   }
 
@@ -84,7 +92,7 @@
 </script>
 
 <template>
-  <div class="p-6 max-w-3xl mx-auto space-y-6 bg-white shadow-md rounded my-10">
+  <div class="p-4 md:p-12 max-w-3xl mx-auto space-y-6 bg-white shadow-md rounded my-10">
     <div class="p-6 max-w-2xl mx-auto">
       <h1 :class="['text-2xl font-bold mb-4']">Todos</h1>
 
@@ -92,6 +100,7 @@
         <button @click="filterByFinished(null)" class="cursor-pointer px-4 py-2 rounded bg-gray-200 hover:bg-gray-300">
           Remaining
         </button>
+
         <button @click="filterByFinished(1)" class="cursor-pointer px-4 py-2 rounded bg-green-200 hover:bg-green-300">
           Finished
         </button>
@@ -108,11 +117,15 @@
 
       <button
         @click="addTodo"
-        class="px-4 py-2 bg-gray-200 cursor-pointer text-black rounded hover:bg-gray-300 disabled:opacity-50"
+        class="px-4 py-2 bg-gray-200 cursor-pointer text-black rounded hover:bg-gray-300 disabled:opacity-50 shadow-sm focus:ring-2 focus:ring-gray-200"
         :disabled="store.addTodoLoading"
       >
         Add
       </button>
+    </div>
+
+    <div v-if="errorMessage">
+      <p class="text-red-500 py-1 px-2">{{ errorMessage }}</p>
     </div>
 
     <div :class="['flex justify-center items-center py-10', { hidden: !store.loadingContainer }]">
@@ -174,7 +187,7 @@
         v-for="n in store.meta.last_page"
         :key="n"
         @click="router.push({ query: { ...route.query, page: n } })"
-        class="px-2.5 py-1.5 border border-white rounded-full text-sm transition cursor-pointer"
+        class="px-3 py-1.5 border border-white rounded-full text-sm transition cursor-pointer"
         :class="{
           'bg-green-400 text-white': parseInt(route.query.page) === n || (!route.query.page && n === 1),
           'hover:bg-gray-100': parseInt(route.query.page) !== n,
