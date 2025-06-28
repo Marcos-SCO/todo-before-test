@@ -6,7 +6,7 @@ const isLocalhost = process.env.NODE_ENV === 'development';
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: isLocalhost ? '/' : '/todo-before-test/',
+  // base: isLocalhost ? '/' : '/todo-before-test/',
   plugins: [
     vue(),
     tailwindcss()

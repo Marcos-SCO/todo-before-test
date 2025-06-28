@@ -29,3 +29,5 @@ fontawesome
 
 githubpages
 - npm install --save-dev gh-pages
+
+npx gh-pages -d dist
