@@ -31,3 +31,6 @@ githubpages
 - npm install --save-dev gh-pages
 
 npx gh-pages -d dist
+
+# laravel cors file
+- php artisan config:publish cors
