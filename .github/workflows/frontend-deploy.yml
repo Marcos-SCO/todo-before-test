@@ -8,6 +8,7 @@ name: 🚀 Deploy frontend on push
 jobs:
   build-deploy:
     runs-on: ubuntu-latest
+    environment: frontend-deploy
     defaults:
       run:
         working-directory: todo-frontend
@@ -21,14 +22,30 @@ jobs:
         with:
           node-version: "22.15.0"
 
+      - name: Show vars (sanitized)
+        run: |
+          echo "VITE_API_URL=${{ vars.VITE_API_URL }}"
+          echo "VITE_BASE_URL=${{ vars.VITE_BASE_URL }}"
+
       - name: Create .env.production file
-        run: echo "VITE_API_URL=${{ secrets.VITE_API_URL }}" > .env.production
+        run: |
+          echo "VITE_API_URL=${{ vars.VITE_API_URL }}" >> .env.production
+          echo "VITE_BASE_URL=${{ vars.VITE_BASE_URL }}" >> .env.production
+
+      - name: Check that .env.production was created
+        run: ls -la && cat .env.production | sed 's/=.*/=*** (hidden)/'
+
+      - name: Debug .env.production
+        run: cat .env.production
 
       - name: Install dependencies
         run: npm ci
 
       - name: Build project
-        run: npm run build
+        run: npm run build -- --mode production
+
+      - name: List build output
+        run: ls -la dist
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4

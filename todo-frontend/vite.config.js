@@ -6,7 +6,7 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
 
-  const baseUrl = env.VITE_BASE_URL ?? '/';
+  const baseUrl = env.VITE_BASE_URL || '/';
 
   return {
     base: baseUrl,
