@@ -8,7 +8,7 @@ name: 🚀 Deploy api on push
 jobs:
   web-deploy:
     name: 🎉 Deploy
-    environment: alloy-api-deploy
+    environment: api-deploy
     runs-on: ubuntu-latest
 
     steps:

@@ -4,7 +4,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        user: todoBeforeTest
+        user: todoList
         uid: 1000
     working_dir: /application/todo-api
     volumes:
@@ -13,7 +13,7 @@ services:
     # depends_on:
     #   - mysql
     networks:
-      - todoBeforeTest
+      - todoList
 
   frontend:
     image: node:22.15.0-alpine
@@ -27,7 +27,7 @@ services:
       - 8.8.8.8
       - 8.8.4.4
     networks:
-      - todoBeforeTest
+      - todoList
 
   nginx:
     image: nginx:alpine
@@ -39,7 +39,7 @@ services:
     depends_on:
       - app
     networks:
-      - todoBeforeTest
+      - todoList
 
   # mysql:
   #   image: mysql:8.0
@@ -55,10 +55,10 @@ services:
   #     - 3306:3306
   #     - "${DOCKER_EXTERNAL_MYSQL_PORT}:3306"
   #   networks:
-  #     - todoBeforeTest
+  #     - todoList
 
 networks:
-  todoBeforeTest:
+  todoList:
     driver: bridge
 
 # volumes:
